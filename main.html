@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="APP">
+        <H1>weather app</H1>
+        <form class="search-form" id="searchForm">
+            <input 
+            type="text"
+            placeholder="ENTER CITY NAME"
+            class="search-input"
+            id="cityinput"
+            value="ranchi"
+            >
+            <button type="submit" class="search-button">search</button>
+        </form>
+        <p id="loadingmessage" style="display: none;text-align: center;">loading...</p>
+        <p id="errormessage" class="errormessage" style="display: none;"></p>
+        <div id="weatherdetails" class="weatherdetails" style="display: none;"></div>
+
+    </div>
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const cityinput = document.getElementById('cityinput');
+        const loadingmessage = document.getElementById('loadingmessage');
+        const errormessage = document.getElementById('errormessage');
+        const weatherdetails = document.getElementById('weatherdetails');
+
+
+
+        const fetchweather = async(city)=>{
+            try{
+                loadingmessage.style.display = 'block';
+                errormessage.style.display='none';
+                weatherdetails.style.display='none';
+
+
+                const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=da13f80feb264f199c252656240912&q=${city}&aqi=no`);
+                if (!response.ok){
+                    throw new error ('failed to fetch weather data');
+                }
+                const data = await response.json();
+                displayweather(data);
+                console.log(data)
+                }catch (err){
+                    errormessage.textContent = 'failed to fetch weather data. please check the city name.';
+                    errormessage.style.display='block';
+                }finally{
+
+                    loadingmessage.style.display='none';
+                }
+            }
+            
+            
+        
+            searchForm.addEventListener('submit',(e)=>{
+                e.preventDefault();
+                const city = cityinput.value.trim();
+                console.log(city)
+            if (city){
+                fetchweather(city);
+            }
+        })
+        </script>
+</body>
+</html>
